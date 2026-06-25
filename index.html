@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroLog CSV Converter</title>
+  <link rel="stylesheet" href="./styles.css?v=20260625">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero-card">
+      <div class="hero-topbar">
+        <p class="eyebrow" data-i18n="eyebrow">AeroLog Import Tools</p>
+        <label class="language-control">
+          <span data-i18n="language_label">Language</span>
+          <select id="language-select" aria-label="Language" data-i18n-aria="language_label"></select>
+        </label>
+      </div>
+      <h1 data-i18n-html="hero_title_html">CSV to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code></h1>
+      <p class="hero-copy" data-i18n="hero_copy">
+        This page reads a single CSV file, automatically detects known columns,
+        validates the minimum required fields, and generates the three JSON files expected by the app.
+      </p>
+      <div class="hero-briefing">
+        <article class="hero-brief-card">
+          <h2 data-i18n="hero_why_title">Why this page exists</h2>
+          <p data-i18n="hero_why_copy">CSV exports often use labels that do not match the app. This tool helps normalize them before import so the generated JSON stays usable.</p>
+        </article>
+        <article class="hero-brief-card">
+          <h2 data-i18n="hero_how_title">How to use it</h2>
+          <p data-i18n="hero_how_copy">Load a CSV, drag the expected labels onto the right columns, fix orange or red signals, then download the three JSON files.</p>
+        </article>
+        <article class="hero-brief-card">
+          <h2 data-i18n="hero_minimums_title">Minimum fields</h2>
+          <p data-i18n-html="hero_minimums_copy_html"><strong>Flight</strong>: date, registration, pilot 1, and total aircraft or simulator time.<br><strong>Aircraft</strong>: manufacturer and model.<br><strong>Route</strong>: departure and arrival for non-simulator rows.</p>
+        </article>
+      </div>
+      <div class="hero-actions">
+        <label class="primary-button file-button">
+          <input id="csv-file-input" type="file" accept=".csv,text/csv">
+          <span data-i18n="choose_csv">Choose a CSV</span>
+        </label>
+        <button id="template-button" class="secondary-button" type="button" data-i18n="download_csv_template">Download CSV template</button>
+      </div>
+      <p class="helper-text" data-i18n-html="output_filenames_html">
+        Output filenames are always set to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code>.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2 data-i18n="default_settings_title">Default settings</h2>
+        <p data-i18n="default_settings_copy">Used when the CSV does not provide some aircraft details.</p>
+      </div>
+      <div class="form-grid defaults-grid">
+        <label class="span-two">
+          <span data-i18n="default_type_label">Default type</span>
+          <select id="default-aircraft-type">
+            <option value="Aircraft" data-i18n="aircraft_type_aircraft">Aircraft</option>
+            <option value="Simulator" data-i18n="aircraft_type_simulator">Simulator</option>
+          </select>
+        </label>
+        <label class="span-two">
+          <span data-i18n="default_engine_type_label">Default engine type</span>
+          <select id="default-engine-type">
+            <option value="Piston" data-i18n="engine_type_piston">Piston</option>
+            <option value="Turboprop/Shaft" data-i18n="engine_type_turboprop">Turboprop/Shaft</option>
+            <option value="Jet" data-i18n="engine_type_jet">Jet</option>
+          </select>
+        </label>
+        <label class="span-two">
+          <span data-i18n="default_class_label">Default class</span>
+          <select id="default-aircraft-class">
+            <option value="AP" data-i18n="aircraft_class_ap">Aeroplane (AP)</option>
+            <option value="RT" data-i18n="aircraft_class_rt">Rotorcraft (RT)</option>
+            <option value="DR" data-i18n="aircraft_class_dr">Drone (DR)</option>
+            <option value="GL" data-i18n="aircraft_class_gl">Glider (GL)</option>
+            <option value="ML" data-i18n="aircraft_class_ml">Microlight (ML)</option>
+            <option value="PL" data-i18n="aircraft_class_pl">Powered Lift (PL)</option>
+            <option value="LA" data-i18n="aircraft_class_la">Lighter Than Air (LA)</option>
+          </select>
+        </label>
+        <label class="span-three">
+          <span data-i18n="default_pilot_company_label">Default pilot company</span>
+          <input id="default-pilot-company" type="text" placeholder="Optional" data-i18n-placeholder="optional_placeholder">
+        </label>
+        <label class="span-three">
+          <span data-i18n="default_aircraft_company_label">Default aircraft company</span>
+          <input id="default-aircraft-company" type="text" placeholder="Optional" data-i18n-placeholder="optional_placeholder">
+        </label>
+      </div>
+      <p class="helper-text" data-i18n-html="tip_html">
+        Tip: keep <code>Aircraft</code>, <code>AP</code>, and an engine type that matches your fleet if the CSV does not include these columns.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2 data-i18n="result_title">Result</h2>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-label" data-i18n="summary_rows">CSV Rows</span>
+          <strong id="summary-rows">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label" data-i18n="summary_flights">Flights</span>
+          <strong id="summary-flights">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label" data-i18n="summary_pilots">Pilots</span>
+          <strong id="summary-pilots">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label" data-i18n="summary_aircrafts">Aircrafts</span>
+          <strong id="summary-aircrafts">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label" data-i18n="summary_errors">Errors</span>
+          <strong id="summary-errors">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label" data-i18n="summary_warnings">Warnings</span>
+          <strong id="summary-warnings">0</strong>
+        </div>
+      </div>
+      <p id="status-banner" class="status-banner neutral summary-feedback" data-i18n="status_no_file">No file loaded.</p>
+      <div id="download-actions" class="download-actions hidden">
+        <button id="download-flights" class="primary-button" type="button" data-i18n="download_flights">Download Flights.json</button>
+        <button id="download-pilots" class="secondary-button" type="button" data-i18n="download_pilots">Download Pilots.json</button>
+        <button id="download-aircrafts" class="secondary-button" type="button" data-i18n="download_aircrafts">Download Aircrafts.json</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading panel-toolbar">
+        <div>
+          <h2 data-i18n="header_overrides_title">CSV header editor</h2>
+          <p data-i18n-html="header_overrides_copy">Drag an expected label onto a column to rename it automatically, or edit it manually. You can also add or remove headers.</p>
+        </div>
+      </div>
+      <div class="editor-legend">
+        <span class="legend-chip ok" data-i18n="legend_validated">Green: validated label</span>
+        <span class="legend-chip optional" data-i18n="legend_optional">Blue: optional recognized label</span>
+        <span class="legend-chip review" data-i18n="legend_unrecognized">Orange: unrecognized column to review</span>
+        <span class="legend-chip missing" data-i18n="legend_error">Red: blocking issue to fix</span>
+      </div>
+      <div class="editor-overview-row">
+        <div class="editor-overview-strip">
+          <div class="editor-metric ok">
+            <span data-i18n="editor_metric_validated">Validated</span>
+            <strong id="editor-validated-count">0</strong>
+          </div>
+          <div class="editor-metric review">
+            <span data-i18n="editor_metric_unrecognized">Unrecognized</span>
+            <strong id="editor-unrecognized-count">0</strong>
+          </div>
+          <div class="editor-metric missing">
+            <span data-i18n="editor_metric_missing">Missing required</span>
+            <strong id="editor-missing-count">0</strong>
+          </div>
+          <div class="editor-metric missing">
+            <span data-i18n="editor_metric_errors">Blocking errors</span>
+            <strong id="editor-errors-count">0</strong>
+          </div>
+          <div class="editor-metric optional">
+            <span data-i18n="editor_metric_warnings">Warnings</span>
+            <strong id="editor-warnings-count">0</strong>
+          </div>
+        </div>
+        <div class="editor-actions">
+          <button id="add-header-button" class="secondary-button" type="button" data-i18n="header_overrides_add">Add a header</button>
+          <button id="reset-header-overrides" class="secondary-button" type="button" data-i18n="header_overrides_reset">Reset renaming</button>
+        </div>
+      </div>
+      <div class="editor-layout">
+        <aside class="editor-sidebar">
+          <div id="expected-fields-palette" class="expected-fields-palette"></div>
+        </aside>
+        <div class="editor-main">
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="header_original_column">Original column</th>
+                  <th data-i18n="header_rename_to">Rename to</th>
+                  <th data-i18n="header_editor_action">Action</th>
+                  <th data-i18n="header_detected_target">Recognition</th>
+                </tr>
+              </thead>
+              <tbody id="header-overrides-body">
+                <tr>
+                  <td colspan="4" class="placeholder-cell" data-i18n="header_overrides_placeholder">Load a CSV to edit column names.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="editor-audit-grid">
+            <article class="editor-audit-card missing">
+              <h3 data-i18n="editor_missing_required_title">Missing required labels</h3>
+              <ul id="missing-required-list" class="issue-list compact-list">
+                <li class="placeholder-item" data-i18n="mapping_placeholder">Load a CSV to see the detected mapping.</li>
+              </ul>
+            </article>
+            <article class="editor-audit-card review">
+              <h3 data-i18n="unused_columns_title">Unrecognized columns</h3>
+              <div id="unused-columns" class="pill-container">
+                <span class="placeholder-pill" data-i18n="unused_columns_placeholder">No columns to display.</span>
+              </div>
+            </article>
+            <article class="editor-audit-card missing">
+              <h3 data-i18n="blocking_errors_title">Blocking errors</h3>
+              <ul id="error-list" class="issue-list compact-list">
+                <li class="placeholder-item" data-i18n="errors_placeholder">No errors yet.</li>
+              </ul>
+            </article>
+            <article class="editor-audit-card optional">
+              <h3 data-i18n="warnings_title">Warnings</h3>
+              <ul id="warning-list" class="issue-list compact-list">
+                <li class="placeholder-item" data-i18n="warnings_placeholder">No warnings yet.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2 data-i18n="preview_title">JSON preview</h2>
+        <p data-i18n="preview_copy">First item from each generated file.</p>
+      </div>
+      <div class="preview-grid">
+        <article class="preview-card">
+          <h3>Flights.json</h3>
+          <pre id="preview-flights">[]</pre>
+        </article>
+        <article class="preview-card">
+          <h3>Pilots.json</h3>
+          <pre id="preview-pilots">[]</pre>
+        </article>
+        <article class="preview-card">
+          <h3>Aircrafts.json</h3>
+          <pre id="preview-aircrafts">[]</pre>
+        </article>
+      </div>
+    </section>
+
+    <div id="problem-row-panel-backdrop" class="problem-row-panel-backdrop hidden"></div>
+    <aside id="problem-row-panel" class="problem-row-panel hidden" aria-hidden="true"></aside>
+  </main>
+
+  <script src="./app.js?v=20260625"></script>
+</body>
+</html>
