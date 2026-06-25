@@ -932,6 +932,7 @@ th {
   width: min(1320px, calc(100vw - 24px));
   max-height: min(76vh, 920px);
   z-index: 31;
+  overscroll-behavior: contain;
 }
 
 .problem-row-panel.hidden,
@@ -944,6 +945,7 @@ th {
   flex-direction: column;
   gap: 16px;
   max-height: inherit;
+  min-height: 0;
   padding: 22px;
   border-radius: 24px;
   border: 1px solid rgba(112, 155, 190, 0.18);
@@ -991,6 +993,7 @@ th {
   overflow: auto;
   padding: 4px 4px 4px 0;
   align-items: start;
+  min-height: 0;
 }
 
 .problem-row-panel .blocking-error-hint {
@@ -1128,17 +1131,17 @@ pre {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .hero-briefing,
-  .editor-layout {
+  .hero-briefing {
     grid-template-columns: 1fr;
   }
 
-  .editor-sidebar {
-    position: static;
+  .editor-layout {
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    gap: 14px;
   }
 
   .expected-fields-palette {
-    max-height: none;
+    max-height: 62vh;
   }
 
   .editor-audit-grid {
@@ -1164,6 +1167,29 @@ pre {
     align-items: stretch;
   }
 
+  .editor-layout {
+    grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .editor-sidebar {
+    padding: 12px;
+    top: 16px;
+  }
+
+  .expected-field-card {
+    padding: 10px 11px;
+    border-radius: 14px;
+  }
+
+  .expected-field-card strong {
+    font-size: 0.88rem;
+  }
+
+  .expected-field-card code {
+    font-size: 0.72rem;
+  }
+
   .defaults-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1175,6 +1201,22 @@ pre {
 
   .problematic-row-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .problem-row-panel {
+    bottom: 12px;
+    width: min(100vw - 16px, 1320px);
+    max-height: 86vh;
+  }
+
+  .problem-row-panel-shell {
+    padding: 18px;
+    border-radius: 22px;
+    gap: 14px;
+  }
+
+  .panel-problem-fields {
+    max-height: calc(86vh - 250px);
   }
 
   .panel-toolbar {
@@ -1212,24 +1254,90 @@ pre {
     grid-template-columns: 1fr;
   }
 
+  .editor-layout {
+    grid-template-columns: minmax(124px, 148px) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+  }
+
+  .editor-sidebar {
+    position: sticky;
+    top: 10px;
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .expected-fields-palette {
+    max-height: 68vh;
+    gap: 8px;
+  }
+
+  .expected-field-card {
+    padding: 9px 10px;
+    border-radius: 12px;
+    gap: 3px;
+  }
+
+  .expected-field-card strong {
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .expected-field-card code {
+    font-size: 0.68rem;
+    padding: 0.1rem 0.28rem;
+  }
+
+  .table-shell {
+    border-radius: 14px;
+  }
+
   .problem-row-panel {
-    bottom: 10px;
-    width: min(100vw - 12px, 1320px);
-    max-height: 82vh;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;
+    width: 100vw;
+    max-height: 92vh;
   }
 
   .problem-row-panel-shell {
-    padding: 18px;
-    border-radius: 20px;
+    padding: 16px 14px 14px;
+    border-radius: 22px 22px 0 0;
+    min-height: 92vh;
   }
 
   .problem-row-panel-header {
     flex-direction: column;
     align-items: stretch;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding-top: 2px;
+    background: linear-gradient(180deg, rgba(18, 34, 49, 0.99) 0%, rgba(18, 34, 49, 0.96) 100%);
   }
 
   .problematic-row-fields {
     grid-template-columns: 1fr;
+  }
+
+  .panel-problem-fields {
+    max-height: calc(92vh - 260px);
+    padding-right: 0;
+  }
+
+  .problem-row-panel .problematic-row-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin: 0 -14px -14px;
+    padding: 14px;
+    background: linear-gradient(180deg, rgba(18, 34, 49, 0.78) 0%, rgba(18, 34, 49, 0.98) 22%);
+  }
+
+  .problem-row-panel .problematic-row-actions .primary-button,
+  .problem-row-panel .problematic-row-actions .secondary-button {
+    width: 100%;
   }
 
   .editor-actions {
@@ -1238,5 +1346,63 @@ pre {
 
   .editor-actions .secondary-button {
     width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .editor-layout {
+    grid-template-columns: 116px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .editor-sidebar {
+    padding: 8px;
+    border-radius: 14px;
+  }
+
+  .expected-fields-palette {
+    max-height: 64vh;
+    gap: 7px;
+  }
+
+  .expected-field-card {
+    padding: 8px 8px 9px;
+  }
+
+  .expected-field-card strong {
+    font-size: 0.76rem;
+  }
+
+  .expected-field-card code {
+    font-size: 0.64rem;
+  }
+
+  .problem-row-panel-shell {
+    padding: 14px 12px 12px;
+    border-radius: 18px 18px 0 0;
+    min-height: 94vh;
+  }
+
+  .problem-row-panel-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .panel-problem-messages {
+    padding: 12px 14px 12px 30px;
+    border-radius: 14px;
+  }
+
+  .problem-row-panel .problematic-row-field {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .panel-problem-fields {
+    max-height: calc(94vh - 250px);
+  }
+
+  .problem-row-panel .problematic-row-actions {
+    margin: 0 -12px -12px;
+    padding: 12px;
   }
 }
