@@ -95,6 +95,13 @@ pre {
   gap: 16px;
 }
 
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 .hero-card::after {
   content: "";
   position: absolute;
@@ -122,6 +129,21 @@ pre {
   font-size: 0.98rem;
   color: #a9c7de;
   font-weight: 800;
+}
+
+.build-badge {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(204, 221, 233, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #edf5fa;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
 }
 
 .language-control {

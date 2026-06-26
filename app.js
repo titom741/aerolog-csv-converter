@@ -1,4 +1,5 @@
 const STORAGE_KEY = "aerolog_csv_converter_language";
+const APP_VERSION = "2026.06.26.1";
 const RTL_LANGUAGES = new Set(["ar"]);
 
 const LANGUAGE_OPTIONS = [
@@ -23,6 +24,7 @@ const TRANSLATIONS = {
   en: {
     page_title: "AeroLog CSV Converter",
     eyebrow: "AeroLog Import Tools",
+    version_label: "Version",
     language_label: "Language",
     hero_title_html: "CSV to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code>",
     hero_copy: "This page reads a single CSV file, automatically detects known columns, validates the minimum required fields, and generates the three JSON files expected by the app.",
@@ -194,6 +196,7 @@ const TRANSLATIONS = {
   fr: {
     page_title: "Convertisseur CSV AeroLog",
     eyebrow: "Outils d'import AeroLog",
+    version_label: "Version",
     language_label: "Langue",
     hero_title_html: "CSV vers <code>Flights.json</code>, <code>Pilots.json</code> et <code>Aircrafts.json</code>",
     hero_copy: "Cette page lit un fichier CSV, détecte automatiquement les colonnes connues, vérifie les champs minimums requis et génère les trois fichiers JSON attendus par l'app.",
@@ -2056,6 +2059,7 @@ const dom = {
   warningList: document.getElementById("warning-list"),
   problemRowPanel: document.getElementById("problem-row-panel"),
   problemRowPanelBackdrop: document.getElementById("problem-row-panel-backdrop"),
+  appVersion: document.getElementById("app-version"),
   previewFlights: document.getElementById("preview-flights"),
   previewPilots: document.getElementById("preview-pilots"),
   previewAircrafts: document.getElementById("preview-aircrafts"),
@@ -2476,7 +2480,8 @@ function buildImportPayloads(rows, mapping, headerDescriptors) {
       return;
     }
 
-    const baseDate = parseFlexibleDate(textOrNull(getValue(row, mapping, "date")));
+    const rawDateValue = textOrNull(getValue(row, mapping, "date"));
+    const baseDate = parseFlexibleDate(rawDateValue);
     if (!baseDate) {
       errors.push(t("row_invalid_date", { lineNumber }));
       addProblematicRow(row, lineNumber, t("row_invalid_date", { lineNumber }), ["date"]);
@@ -2495,9 +2500,10 @@ function buildImportPayloads(rows, mapping, headerDescriptors) {
       return;
     }
 
+    const inferredDepartureClock = extractClockTextFromDateValue(rawDateValue);
     const timeDeparture = buildDateTime(
       baseDate,
-      textOrNull(getValue(row, mapping, "time_departure")),
+      textOrNull(getValue(row, mapping, "time_departure")) || inferredDepartureClock,
       null
     );
     const totalMinutes = durationToMinutes(simulatorTotal || aircraftTotal || fallbackTotal);
@@ -2991,6 +2997,20 @@ function parseFlexibleDate(value) {
   if (frDateDashMatch) {
     const [, day, month, year] = frDateDashMatch;
     return new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+  }
+
+  return null;
+}
+
+function extractClockTextFromDateValue(value) {
+  const text = textOrNull(value);
+  if (!text) {
+    return null;
+  }
+
+  const isoMatch = text.match(/[T\s](\d{2}:\d{2})(?::\d{2})?(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/i);
+  if (isoMatch) {
+    return isoMatch[1];
   }
 
   return null;
@@ -4073,6 +4093,16 @@ function applyTranslations() {
   document.querySelectorAll("option[data-i18n]").forEach((element) => {
     element.textContent = t(element.dataset.i18n);
   });
+
+  renderVersionBadge();
+}
+
+function renderVersionBadge() {
+  if (!dom.appVersion) {
+    return;
+  }
+
+  dom.appVersion.textContent = `${t("version_label")} ${APP_VERSION}`;
 }
 
 function getRoleLabel(role) {
