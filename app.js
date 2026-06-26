@@ -1,5 +1,5 @@
 const STORAGE_KEY = "aerolog_csv_converter_language";
-const APP_VERSION = "2026.06.26.2";
+const APP_VERSION = "2026.06.26.3";
 const RTL_LANGUAGES = new Set(["ar"]);
 
 const LANGUAGE_OPTIONS = [
@@ -99,6 +99,8 @@ const TRANSLATIONS = {
     header_default_value_missing: "Add a default value to populate every row.",
     header_derived_column: "Derived column",
     header_derived_from: "Extracted from {original}",
+    header_derived_sample: "Sample value: {value}",
+    header_auto_split_time: "Embedded time detected: creates {header}.",
     header_remove: "Remove",
     header_restore: "Restore",
     header_delete: "Delete",
@@ -273,6 +275,8 @@ const TRANSLATIONS = {
     header_default_value_missing: "Ajoutez une valeur par defaut pour alimenter toutes les lignes.",
     header_derived_column: "Colonne dérivée",
     header_derived_from: "Extraite depuis {original}",
+    header_derived_sample: "Exemple de valeur : {value}",
+    header_auto_split_time: "Heure détectée dans cette colonne : création de {header}.",
     header_remove: "Supprimer",
     header_restore: "Restaurer",
     header_delete: "Effacer",
@@ -2352,6 +2356,12 @@ function buildDerivedHeaderDescriptors(baseDescriptors, rowMatrix) {
   const edit = appState.headerEdits[derivedId] || {};
   const fallbackName = getCanonicalHeaderName("time_departure");
   const candidateName = textOrNull(edit.name) || fallbackName;
+  const sampleValue = rowMatrix
+    .map((rowValues) => extractClockTextFromDateValue(rowValues[sourceDescriptor.sourceIndex]))
+    .find(Boolean) || "";
+
+  sourceDescriptor.autoSplitTarget = candidateName;
+  sourceDescriptor.autoSplitSample = sampleValue;
 
   return [{
     token: `derived:${derivedId}`,
@@ -2364,6 +2374,7 @@ function buildDerivedHeaderDescriptors(baseDescriptors, rowMatrix) {
     isDerived: true,
     derivedId,
     derivedKind: "extract_time_from_datetime",
+    sampleValue,
     normalized: normalizeHeader(candidateName)
   }];
 }
@@ -3958,10 +3969,19 @@ function renderHeaderEditor(headerDescriptors) {
       ? "delete"
       : (descriptor.removed ? "restore" : "remove");
     const sourceNote = descriptor.isDerived
-      ? `<span class="table-note">${escapeHtml(t("header_derived_from", { original: originalLabel }))}</span>`
+      ? `${[
+        `<span class="table-note">${escapeHtml(t("header_derived_from", { original: originalLabel }))}</span>`,
+        descriptor.sampleValue ? `<span class="table-note">${escapeHtml(t("header_derived_sample", { value: descriptor.sampleValue }))}</span>` : ""
+      ].filter(Boolean).join("")}`
       : ((!descriptor.removed && !descriptor.isAdded && descriptor.original !== descriptor.effective)
         ? `<span class="table-note">${escapeHtml(t("header_renamed_from", { original: originalLabel }))}</span>`
         : "");
+    const autoSplitNote = (!descriptor.isAdded && !descriptor.isDerived && descriptor.autoSplitTarget)
+      ? `${[
+        `<span class="table-note">${escapeHtml(t("header_auto_split_time", { header: descriptor.autoSplitTarget }))}</span>`,
+        descriptor.autoSplitSample ? `<span class="table-note">${escapeHtml(t("header_derived_sample", { value: descriptor.autoSplitSample }))}</span>` : ""
+      ].filter(Boolean).join("")}`
+      : "";
     const defaultValueMarkup = descriptor.isAdded ? `
       <label class="default-value-group">
         <span class="table-note">${escapeHtml(t("header_default_value_label"))}</span>
@@ -4022,6 +4042,7 @@ function renderHeaderEditor(headerDescriptors) {
             <span class="status-chip ${statusClass}">${escapeHtml(statusText)}</span>
             <strong class="header-detected-label">${escapeHtml(matchLabel)}</strong>
             ${sourceNote}
+            ${autoSplitNote}
             ${defaultValueHint}
           </div>
         </td>
