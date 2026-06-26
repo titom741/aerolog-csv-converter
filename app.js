@@ -1,5 +1,5 @@
 const STORAGE_KEY = "aerolog_csv_converter_language";
-const APP_VERSION = "2026.06.26.3";
+const APP_VERSION = "2026.06.26.4";
 const RTL_LANGUAGES = new Set(["ar"]);
 
 const LANGUAGE_OPTIONS = [
@@ -3057,7 +3057,7 @@ function formatMinutes(totalMinutes) {
 }
 
 function parseFlexibleDate(value) {
-  const text = textOrNull(value);
+  const text = normalizeLooseDateTimeText(value);
   if (!text) {
     return null;
   }
@@ -3089,17 +3089,45 @@ function parseFlexibleDate(value) {
 }
 
 function extractClockTextFromDateValue(value) {
-  const text = textOrNull(value);
+  const text = normalizeLooseDateTimeText(value);
   if (!text) {
     return null;
   }
 
-  const isoMatch = text.match(/[T\s](\d{2}:\d{2})(?::\d{2})?(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/i);
+  const isoMatch = text.match(/[T\s](\d{2}:\d{2})(?::\d{2})?(?:\.\d+)?(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?$/i);
   if (isoMatch) {
     return isoMatch[1];
   }
 
   return null;
+}
+
+function normalizeLooseDateTimeText(value) {
+  const source = textOrNull(value);
+  if (!source) {
+    return null;
+  }
+
+  let normalized = source.replace(/\s+/g, " ").trim();
+
+  normalized = normalized.replace(
+    /^(\d{4})[.\-/](\d{2})[.\-/](\d{2})(.*)$/,
+    (_, year, month, day, suffix) => `${year}-${month}-${day}${suffix || ""}`
+  );
+
+  normalized = normalized.replace(
+    /^(\d{2})[.\-/](\d{2})[.\-/](\d{4})(.*)$/,
+    (_, day, month, year, suffix) => `${year}-${month}-${day}${suffix || ""}`
+  );
+
+  normalized = normalized.replace(/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}(?::\d{2})?(?:\.\d+)?)(.*)$/, (_, datePart, timePart, suffix) => {
+    return `${datePart}T${timePart}${suffix || ""}`;
+  });
+
+  normalized = normalized.replace(/\s+Z$/i, "Z");
+  normalized = normalized.replace(/\s+([+-]\d{2}:?\d{2})$/i, "$1");
+
+  return normalized;
 }
 
 function parseClockValue(value) {
