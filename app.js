@@ -1,5 +1,5 @@
 const STORAGE_KEY = "aerolog_csv_converter_language";
-const APP_VERSION = "2026.06.26.1";
+const APP_VERSION = "2026.06.26.2";
 const RTL_LANGUAGES = new Set(["ar"]);
 
 const LANGUAGE_OPTIONS = [
@@ -97,6 +97,8 @@ const TRANSLATIONS = {
     header_default_value_label: "Default value",
     header_default_value_placeholder: "Applied to every row",
     header_default_value_missing: "Add a default value to populate every row.",
+    header_derived_column: "Derived column",
+    header_derived_from: "Extracted from {original}",
     header_remove: "Remove",
     header_restore: "Restore",
     header_delete: "Delete",
@@ -269,6 +271,8 @@ const TRANSLATIONS = {
     header_default_value_label: "Valeur par defaut",
     header_default_value_placeholder: "Appliquee a toutes les lignes",
     header_default_value_missing: "Ajoutez une valeur par defaut pour alimenter toutes les lignes.",
+    header_derived_column: "Colonne dérivée",
+    header_derived_from: "Extraite depuis {original}",
     header_remove: "Supprimer",
     header_restore: "Restaurer",
     header_delete: "Effacer",
@@ -2163,7 +2167,7 @@ function runConversion(csvText) {
   try {
     const parsedCsv = parseCSV(csvText);
     appState.originalHeaders = parsedCsv.originalHeaders;
-    const headerDescriptors = buildHeaderDescriptors(parsedCsv.originalHeaders);
+    const headerDescriptors = buildHeaderDescriptors(parsedCsv.originalHeaders, parsedCsv.rowMatrix);
     validateHeaderDescriptors(headerDescriptors);
     const rows = buildRowObjects(parsedCsv.rowMatrix, headerDescriptors);
     const mapping = detectFieldMapping(headerDescriptors);
@@ -2293,7 +2297,7 @@ function countDelimitersOutsideQuotes(line, candidates) {
   return counts;
 }
 
-function buildHeaderDescriptors(originalHeaders) {
+function buildHeaderDescriptors(originalHeaders, rowMatrix = []) {
   const existingDescriptors = originalHeaders.map((headerMeta) => {
     const edit = appState.headerEdits[headerMeta.id] || {};
     const candidateName = textOrNull(edit.name) || headerMeta.original;
@@ -2320,7 +2324,70 @@ function buildHeaderDescriptors(originalHeaders) {
     normalized: normalizeHeader(addedHeader.name)
   }));
 
-  return [...existingDescriptors, ...addedDescriptors];
+  const derivedDescriptors = buildDerivedHeaderDescriptors(
+    [...existingDescriptors, ...addedDescriptors],
+    rowMatrix
+  );
+
+  return [...existingDescriptors, ...addedDescriptors, ...derivedDescriptors];
+}
+
+function buildDerivedHeaderDescriptors(baseDescriptors, rowMatrix) {
+  const activeDescriptors = baseDescriptors.filter((descriptor) => !descriptor.removed);
+  if (hasFieldLikeDescriptor(activeDescriptors, "time_departure")) {
+    return [];
+  }
+
+  const sourceDescriptor = activeDescriptors.find((descriptor) => (
+    Number.isInteger(descriptor.sourceIndex)
+    && hasFieldLikeDescriptor([descriptor], "date")
+    && columnContainsEmbeddedTime(rowMatrix, descriptor.sourceIndex)
+  ));
+
+  if (!sourceDescriptor) {
+    return [];
+  }
+
+  const derivedId = `${sourceDescriptor.originalId || sourceDescriptor.token}:time_departure`;
+  const edit = appState.headerEdits[derivedId] || {};
+  const fallbackName = getCanonicalHeaderName("time_departure");
+  const candidateName = textOrNull(edit.name) || fallbackName;
+
+  return [{
+    token: `derived:${derivedId}`,
+    original: sourceDescriptor.original,
+    originalId: sourceDescriptor.originalId,
+    sourceIndex: sourceDescriptor.sourceIndex,
+    effective: candidateName,
+    removed: edit.removed === true,
+    isAdded: false,
+    isDerived: true,
+    derivedId,
+    derivedKind: "extract_time_from_datetime",
+    normalized: normalizeHeader(candidateName)
+  }];
+}
+
+function hasFieldLikeDescriptor(descriptors, fieldKey) {
+  const field = FIELD_DEFINITIONS.find((entry) => entry.key === fieldKey);
+  if (!field) {
+    return false;
+  }
+
+  const aliases = field.aliases.map(normalizeHeader);
+  return descriptors.some((descriptor) => aliases.includes(descriptor.normalized));
+}
+
+function columnContainsEmbeddedTime(rowMatrix, sourceIndex) {
+  return rowMatrix.some((rowValues) => extractClockTextFromDateValue(rowValues[sourceIndex]));
+}
+
+function resolveDerivedHeaderValue(descriptor, rowValues) {
+  if (descriptor.derivedKind === "extract_time_from_datetime") {
+    return extractClockTextFromDateValue(rowValues[descriptor.sourceIndex]) || "";
+  }
+
+  return "";
 }
 
 function validateHeaderDescriptors(headerDescriptors) {
@@ -2366,9 +2433,17 @@ function buildRowObjects(rowMatrix, headerDescriptors) {
         return;
       }
 
-      object[descriptor.effective] = descriptor.isAdded
-        ? (descriptor.defaultValue || "")
-        : (rowValues[descriptor.sourceIndex] !== undefined ? rowValues[descriptor.sourceIndex] : "");
+      if (descriptor.isAdded) {
+        object[descriptor.effective] = descriptor.defaultValue || "";
+        return;
+      }
+
+      if (descriptor.isDerived) {
+        object[descriptor.effective] = resolveDerivedHeaderValue(descriptor, rowValues);
+        return;
+      }
+
+      object[descriptor.effective] = rowValues[descriptor.sourceIndex] !== undefined ? rowValues[descriptor.sourceIndex] : "";
     });
 
     object.__lineNumber = lineNumber;
@@ -3197,6 +3272,27 @@ function handleHeaderEditorChange(event) {
     }
   }
 
+  if (rowType === "derived") {
+    const derivedHeaderId = input.dataset.derivedHeaderId;
+    const fallbackName = getCanonicalHeaderName("time_departure");
+    const currentEdit = appState.headerEdits[derivedHeaderId] || {};
+
+    if (!nextValue || nextValue === fallbackName) {
+      const nextEdit = { ...currentEdit };
+      delete nextEdit.name;
+      if (Object.keys(nextEdit).length === 0) {
+        delete appState.headerEdits[derivedHeaderId];
+      } else {
+        appState.headerEdits[derivedHeaderId] = nextEdit;
+      }
+    } else {
+      appState.headerEdits[derivedHeaderId] = {
+        ...currentEdit,
+        name: nextValue
+      };
+    }
+  }
+
   if (event.type === "input") {
     return;
   }
@@ -3337,6 +3433,7 @@ function handleHeaderEditorAction(event) {
   const action = button.dataset.headerAction;
   const originalHeaderId = button.dataset.originalHeaderId;
   const addedHeaderId = button.dataset.addedHeaderId;
+  const derivedHeaderId = button.dataset.derivedHeaderId;
 
   if (action === "remove" && originalHeaderId) {
     appState.headerEdits[originalHeaderId] = {
@@ -3357,6 +3454,23 @@ function handleHeaderEditorAction(event) {
 
   if (action === "delete" && addedHeaderId) {
     appState.addedHeaders = appState.addedHeaders.filter((header) => header.id !== addedHeaderId);
+  }
+
+  if (action === "remove" && derivedHeaderId) {
+    appState.headerEdits[derivedHeaderId] = {
+      ...(appState.headerEdits[derivedHeaderId] || {}),
+      removed: true
+    };
+  }
+
+  if (action === "restore" && derivedHeaderId) {
+    const currentEdit = { ...(appState.headerEdits[derivedHeaderId] || {}) };
+    delete currentEdit.removed;
+    if (Object.keys(currentEdit).length === 0) {
+      delete appState.headerEdits[derivedHeaderId];
+    } else {
+      appState.headerEdits[derivedHeaderId] = currentEdit;
+    }
   }
 
   if (appState.csvText) {
@@ -3458,6 +3572,15 @@ function applyExpectedFieldToHeader(dropzone, fieldKey) {
     if (targetHeader) {
       targetHeader.name = canonicalName;
     }
+  }
+
+  if (rowType === "derived") {
+    const derivedHeaderId = dropzone.dataset.derivedHeaderId;
+    appState.headerEdits[derivedHeaderId] = {
+      ...(appState.headerEdits[derivedHeaderId] || {}),
+      name: canonicalName,
+      removed: false
+    };
   }
 
   if (appState.csvText) {
@@ -3825,16 +3948,20 @@ function renderHeaderEditor(headerDescriptors) {
       : (matchedField ? (matchedField.required ? "header-row-matched-required" : "header-row-matched-optional") : "header-row-unmatched");
     const sourceLabel = descriptor.isAdded
       ? `<span class="status-chip optional">${escapeHtml(t("header_manual_column"))}</span>`
-      : `<code>${escapeHtml(originalLabel)}</code>`;
+      : (descriptor.isDerived
+        ? `<div class="header-source-stack"><span class="status-chip optional">${escapeHtml(t("header_derived_column"))}</span><code>${escapeHtml(originalLabel)}</code></div>`
+        : `<code>${escapeHtml(originalLabel)}</code>`);
     const actionLabel = descriptor.isAdded
       ? t("header_delete")
       : (descriptor.removed ? t("header_restore") : t("header_remove"));
     const actionType = descriptor.isAdded
       ? "delete"
       : (descriptor.removed ? "restore" : "remove");
-    const sourceNote = (!descriptor.removed && !descriptor.isAdded && descriptor.original !== descriptor.effective)
-      ? `<span class="table-note">${escapeHtml(t("header_renamed_from", { original: originalLabel }))}</span>`
-      : "";
+    const sourceNote = descriptor.isDerived
+      ? `<span class="table-note">${escapeHtml(t("header_derived_from", { original: originalLabel }))}</span>`
+      : ((!descriptor.removed && !descriptor.isAdded && descriptor.original !== descriptor.effective)
+        ? `<span class="table-note">${escapeHtml(t("header_renamed_from", { original: originalLabel }))}</span>`
+        : "");
     const defaultValueMarkup = descriptor.isAdded ? `
       <label class="default-value-group">
         <span class="table-note">${escapeHtml(t("header_default_value_label"))}</span>
@@ -3859,20 +3986,22 @@ function renderHeaderEditor(headerDescriptors) {
           <div
             class="header-dropzone"
             data-header-dropzone="1"
-            data-row-type="${descriptor.isAdded ? "added" : "original"}"
+            data-row-type="${descriptor.isAdded ? "added" : (descriptor.isDerived ? "derived" : "original")}"
             ${descriptor.originalId ? `data-original-header-id="${escapeHtml(descriptor.originalId)}"` : ""}
             ${descriptor.original !== null && descriptor.original !== undefined ? `data-original-header-value="${escapeHtml(descriptor.original)}"` : ""}
             ${descriptor.addedId ? `data-added-header-id="${escapeHtml(descriptor.addedId)}"` : ""}
+            ${descriptor.derivedId ? `data-derived-header-id="${escapeHtml(descriptor.derivedId)}"` : ""}
           >
             <input
               class="override-input"
               type="text"
               value="${escapeHtml(descriptor.effective)}"
               data-header-input="1"
-              data-row-type="${descriptor.isAdded ? "added" : "original"}"
+              data-row-type="${descriptor.isAdded ? "added" : (descriptor.isDerived ? "derived" : "original")}"
               ${descriptor.originalId ? `data-original-header-id="${escapeHtml(descriptor.originalId)}"` : ""}
               ${descriptor.original !== null && descriptor.original !== undefined ? `data-original-header-value="${escapeHtml(descriptor.original)}"` : ""}
               ${descriptor.addedId ? `data-added-header-id="${escapeHtml(descriptor.addedId)}"` : ""}
+              ${descriptor.derivedId ? `data-derived-header-id="${escapeHtml(descriptor.derivedId)}"` : ""}
               ${descriptor.removed ? "disabled" : ""}
             >
             ${defaultValueMarkup}
@@ -3885,6 +4014,7 @@ function renderHeaderEditor(headerDescriptors) {
             data-header-action="${actionType}"
             ${descriptor.originalId ? `data-original-header-id="${escapeHtml(descriptor.originalId)}"` : ""}
             ${descriptor.addedId ? `data-added-header-id="${escapeHtml(descriptor.addedId)}"` : ""}
+            ${descriptor.derivedId ? `data-derived-header-id="${escapeHtml(descriptor.derivedId)}"` : ""}
           >${escapeHtml(actionLabel)}</button>
         </td>
         <td>

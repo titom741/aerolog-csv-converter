@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AeroLog CSV Converter</title>
-  <link rel="stylesheet" href="./styles.css?v=20260626a">
+  <link rel="stylesheet" href="./styles.css?v=20260626b">
 </head>
 <body>
   <main class="page-shell">
     <section class="hero-card">
       <div class="hero-topbar">
-        <div class="hero-meta">
-          <p class="eyebrow" data-i18n="eyebrow">AeroLog Import Tools</p>
+        <p class="eyebrow" data-i18n="eyebrow">AeroLog Import Tools</p>
+        <div class="hero-topbar-actions">
           <p id="app-version" class="build-badge">Version -</p>
+          <label class="language-control">
+            <span data-i18n="language_label">Language</span>
+            <select id="language-select" aria-label="Language" data-i18n-aria="language_label"></select>
+          </label>
         </div>
-        <label class="language-control">
-          <span data-i18n="language_label">Language</span>
-          <select id="language-select" aria-label="Language" data-i18n-aria="language_label"></select>
-        </label>
       </div>
       <h1 data-i18n-html="hero_title_html">CSV to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code></h1>
       <p class="hero-copy" data-i18n="hero_copy">
@@ -253,6 +253,6 @@
     <aside id="problem-row-panel" class="problem-row-panel hidden" aria-hidden="true"></aside>
   </main>
 
-  <script src="./app.js?v=20260626a"></script>
+  <script src="./app.js?v=20260626b"></script>
 </body>
 </html>
