@@ -1,5 +1,5 @@
 const STORAGE_KEY = "aerolog_csv_converter_language";
-const APP_VERSION = "2026.06.26.4";
+const APP_VERSION = "2026.07.08.1";
 const RTL_LANGUAGES = new Set(["ar"]);
 
 const LANGUAGE_OPTIONS = [
@@ -23,20 +23,27 @@ const LANGUAGE_OPTIONS = [
 const TRANSLATIONS = {
   en: {
     page_title: "AeroLog CSV Converter",
+    page_title_file: "AeroLog CSV/XLSX Converter",
     eyebrow: "AeroLog Import Tools",
     version_label: "Version",
     language_label: "Language",
     hero_title_html: "CSV to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code>",
     hero_copy: "This page reads a single CSV file, automatically detects known columns, validates the minimum required fields, and generates the three JSON files expected by the app.",
+    hero_title_file_html: "CSV/XLSX to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code>",
+    hero_copy_file: "This page reads a single CSV or XLSX file, automatically detects known columns, validates the minimum required fields, and generates the three JSON files expected by the app.",
     hero_why_title: "Why this page exists",
     hero_why_copy: "CSV exports often use labels that do not match the app. This tool helps normalize them before import so the generated JSON stays usable.",
     hero_how_title: "How to use it",
     hero_how_copy: "Load a CSV, drag the expected labels onto the right columns, fix orange or red signals, then download the three JSON files.",
+    hero_how_copy_file: "Load a CSV or XLSX file, drag the expected labels onto the right columns, fix orange or red signals, then download the three JSON files.",
     hero_minimums_title: "Minimum fields",
     hero_minimums_copy_html: "<strong>Flight</strong>: date, registration, pilot 1, and total aircraft or simulator time.<br><strong>Aircraft</strong>: manufacturer and model.<br><strong>Route</strong>: departure and arrival for non-simulator rows.",
     choose_csv: "Choose a CSV",
+    choose_file: "Choose a CSV or XLSX",
     download_csv_template: "Download CSV template",
+    download_xlsx_template: "Download XLSX template",
     output_filenames_html: "Output filenames are always set to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code>.",
+    template_hint_html: "In the CSV template, required headers start with <code>*</code>. In the XLSX template, required headers are bold.",
     default_settings_title: "Default settings",
     default_settings_copy: "Used when the CSV does not provide some aircraft details.",
     default_type_label: "Default type",
@@ -65,7 +72,9 @@ const TRANSLATIONS = {
     download_pilots: "Download Pilots.json",
     download_aircrafts: "Download Aircrafts.json",
     header_overrides_title: "CSV header editor",
+    header_overrides_title_file: "CSV/XLSX header editor",
     header_overrides_copy: "Drag an expected label onto a column to rename it automatically, or edit it manually. You can also add or remove headers.",
+    header_overrides_copy_file: "Drag an expected label onto a CSV or XLSX column to rename it automatically, or edit it manually. You can also add or remove headers.",
     header_overrides_add: "Add a header",
     header_overrides_reset: "Reset renaming",
     expected_fields_copy: "Drag one of the expected labels below onto a CSV column.",
@@ -93,6 +102,7 @@ const TRANSLATIONS = {
     header_editor_action: "Action",
     header_detected_target: "Recognition",
     header_overrides_placeholder: "Load a CSV to edit column names.",
+    header_overrides_placeholder_file: "Load a CSV or XLSX file to edit column names.",
     header_manual_column: "Manual header",
     header_default_value_label: "Default value",
     header_default_value_placeholder: "Applied to every row",
@@ -142,6 +152,8 @@ const TRANSLATIONS = {
     no_warnings: "No warnings.",
     unknown_error_csv: "Unknown error while reading the CSV.",
     csv_empty: "The CSV file is empty.",
+    xlsx_parse_error: "Unable to read the XLSX file.",
+    xlsx_missing_sheet: "No worksheet was found in this XLSX file.",
     loaded_file_fallback: "the loaded file",
     error_missing_date_column: "Date column not found. Add something like `date`, `flight_date`, or `pilotlog_date`.",
     error_missing_registration_column: "Registration column not found. Add something like `registration`, `tail`, or `ac_reg`.",
@@ -199,20 +211,27 @@ const TRANSLATIONS = {
   },
   fr: {
     page_title: "Convertisseur CSV AeroLog",
+    page_title_file: "Convertisseur CSV/XLSX AeroLog",
     eyebrow: "Outils d'import AeroLog",
     version_label: "Version",
     language_label: "Langue",
     hero_title_html: "CSV vers <code>Flights.json</code>, <code>Pilots.json</code> et <code>Aircrafts.json</code>",
     hero_copy: "Cette page lit un fichier CSV, détecte automatiquement les colonnes connues, vérifie les champs minimums requis et génère les trois fichiers JSON attendus par l'app.",
+    hero_title_file_html: "CSV/XLSX vers <code>Flights.json</code>, <code>Pilots.json</code> et <code>Aircrafts.json</code>",
+    hero_copy_file: "Cette page lit un fichier CSV ou XLSX, détecte automatiquement les colonnes connues, vérifie les champs minimums requis et génère les trois fichiers JSON attendus par l'app.",
     hero_why_title: "Pourquoi cette page existe",
     hero_why_copy: "Les exports CSV utilisent souvent des libellés qui ne correspondent pas à ceux de l'app. Cet outil sert à les normaliser avant l'import pour garder des JSON exploitables.",
     hero_how_title: "Comment l'utiliser",
     hero_how_copy: "Chargez un CSV, glissez les étiquettes attendues sur les bonnes colonnes, corrigez les signaux orange ou rouges, puis téléchargez les trois fichiers JSON.",
+    hero_how_copy_file: "Chargez un fichier CSV ou XLSX, glissez les étiquettes attendues sur les bonnes colonnes, corrigez les signaux orange ou rouges, puis téléchargez les trois fichiers JSON.",
     hero_minimums_title: "Champs minimums",
     hero_minimums_copy_html: "<strong>Vol</strong> : date, immatriculation, pilote 1 et temps total avion ou simulateur.<br><strong>Avion</strong> : constructeur et modèle.<br><strong>Trajet</strong> : départ et arrivée pour les lignes non simulateur.",
     choose_csv: "Choisir un CSV",
+    choose_file: "Choisir un CSV ou XLSX",
     download_csv_template: "Télécharger le modèle CSV",
+    download_xlsx_template: "Télécharger le modèle XLSX",
     output_filenames_html: "Les noms de sortie sont toujours <code>Flights.json</code>, <code>Pilots.json</code> et <code>Aircrafts.json</code>.",
+    template_hint_html: "Dans le modèle CSV, les champs requis commencent par <code>*</code>. Dans le modèle XLSX, les champs requis sont en gras.",
     default_settings_title: "Réglages par défaut",
     default_settings_copy: "Utilisés quand le CSV ne fournit pas certains détails avion.",
     default_type_label: "Type par défaut",
@@ -241,7 +260,9 @@ const TRANSLATIONS = {
     download_pilots: "Télécharger Pilots.json",
     download_aircrafts: "Télécharger Aircrafts.json",
     header_overrides_title: "Éditeur de headers CSV",
+    header_overrides_title_file: "Éditeur de headers CSV/XLSX",
     header_overrides_copy: "Glissez une étiquette attendue sur une colonne pour la renommer automatiquement, ou modifiez-la manuellement. Vous pouvez aussi ajouter ou supprimer des headers.",
+    header_overrides_copy_file: "Glissez une étiquette attendue sur une colonne CSV ou XLSX pour la renommer automatiquement, ou modifiez-la manuellement. Vous pouvez aussi ajouter ou supprimer des headers.",
     header_overrides_add: "Ajouter un header",
     header_overrides_reset: "Réinitialiser",
     expected_fields_copy: "Glissez l'une des étiquettes attendues ci-dessous sur une colonne du CSV.",
@@ -269,6 +290,7 @@ const TRANSLATIONS = {
     header_editor_action: "Action",
     header_detected_target: "Reconnaissance",
     header_overrides_placeholder: "Chargez un CSV pour modifier les noms de colonnes.",
+    header_overrides_placeholder_file: "Chargez un fichier CSV ou XLSX pour modifier les noms de colonnes.",
     header_manual_column: "Header manuel",
     header_default_value_label: "Valeur par defaut",
     header_default_value_placeholder: "Appliquee a toutes les lignes",
@@ -318,6 +340,8 @@ const TRANSLATIONS = {
     no_warnings: "Aucun avertissement.",
     unknown_error_csv: "Erreur inconnue pendant la lecture du CSV.",
     csv_empty: "Le fichier CSV est vide.",
+    xlsx_parse_error: "Impossible de lire le fichier XLSX.",
+    xlsx_missing_sheet: "Aucune feuille n'a été trouvée dans ce fichier XLSX.",
     loaded_file_fallback: "le fichier chargé",
     error_missing_date_column: "Colonne date introuvable. Ajoutez par exemple `date`, `flight_date` ou `pilotlog_date`.",
     error_missing_registration_column: "Colonne immatriculation introuvable. Ajoutez par exemple `registration`, `tail` ou `ac_reg`.",
@@ -2019,6 +2043,33 @@ const AIRCRAFT_FIELD_LABEL_KEYS = {
   aircraftClass: "aircraft_field_aircraftClass",
   engineType: "aircraft_field_engineType"
 };
+const TEMPLATE_HEADERS = [
+  "date",
+  "time_departure",
+  "time_arrival",
+  "registration",
+  "aircraft_manufact",
+  "aircraft_model",
+  "departure_airport",
+  "arrival_airport",
+  "time_total_aircraft",
+  "pilot1_first_name",
+  "pilot1_last_name",
+  "pilot2_first_name",
+  "pilot2_last_name",
+  "flight_number",
+  "remarks"
+];
+const TEMPLATE_REQUIRED_HEADERS = new Set([
+  "date",
+  "registration",
+  "aircraft_manufact",
+  "aircraft_model",
+  "departure_airport",
+  "arrival_airport",
+  "time_total_aircraft",
+  "pilot1_last_name"
+]);
 
 const appState = {
   fileName: "",
@@ -2040,6 +2091,7 @@ let headerEditorRerunTimer = null;
 const dom = {
   input: document.getElementById("csv-file-input"),
   templateButton: document.getElementById("template-button"),
+  templateXlsxButton: document.getElementById("template-xlsx-button"),
   languageSelect: document.getElementById("language-select"),
   statusBanner: document.getElementById("status-banner"),
   summaryRows: document.getElementById("summary-rows"),
@@ -2085,7 +2137,8 @@ function initialize() {
   setLanguage(resolveInitialLanguage(), { rerender: false });
 
   dom.input.addEventListener("change", handleFileSelection);
-  dom.templateButton.addEventListener("click", downloadTemplate);
+  dom.templateButton.addEventListener("click", downloadCsvTemplate);
+  dom.templateXlsxButton?.addEventListener("click", downloadXlsxTemplate);
   dom.languageSelect.addEventListener("change", (event) => {
     setLanguage(event.target.value);
   });
@@ -2138,8 +2191,305 @@ async function handleFileSelection(event) {
 
   appState.fileName = file.name;
   resetHeaderEditorState();
-  const text = await file.text();
-  runConversion(text);
+
+  try {
+    const text = await readImportFile(file);
+    runConversion(text);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : t("unknown_error_csv");
+    renderFatal(message);
+  } finally {
+    event.target.value = "";
+  }
+}
+
+async function readImportFile(file) {
+  if (isXlsxFile(file)) {
+    const arrayBuffer = await file.arrayBuffer();
+    return convertXlsxArrayBufferToCsv(arrayBuffer);
+  }
+
+  return file.text();
+}
+
+function isXlsxFile(file) {
+  const name = String(file?.name || "").toLowerCase();
+  return name.endsWith(".xlsx");
+}
+
+async function convertXlsxArrayBufferToCsv(arrayBuffer) {
+  if (!window.JSZip) {
+    throw new Error(t("xlsx_parse_error"));
+  }
+
+  try {
+    const zip = await window.JSZip.loadAsync(arrayBuffer);
+    const workbookXml = await readZipText(zip, "xl/workbook.xml");
+    const workbookRelsXml = await readZipText(zip, "xl/_rels/workbook.xml.rels");
+    const sharedStrings = await readSharedStrings(zip);
+    const styleKinds = await readStyleKinds(zip);
+    const worksheetPath = resolveFirstWorksheetPath(workbookXml, workbookRelsXml);
+
+    if (!worksheetPath) {
+      throw new Error(t("xlsx_missing_sheet"));
+    }
+
+    const worksheetXml = await readZipText(zip, worksheetPath);
+    const rows = parseWorksheetRows(worksheetXml, sharedStrings, styleKinds);
+    const normalizedRows = trimEmptyWorksheetRows(rows);
+
+    if (!normalizedRows.length || !normalizedRows[0].some((value) => textOrNull(value))) {
+      throw new Error(t("csv_empty"));
+    }
+
+    return matrixToCsv(normalizedRows);
+  } catch (error) {
+    if (error instanceof Error && [t("xlsx_missing_sheet"), t("csv_empty")].includes(error.message)) {
+      throw error;
+    }
+    throw new Error(t("xlsx_parse_error"));
+  }
+}
+
+async function readZipText(zip, path) {
+  const entry = zip.file(path);
+  if (!entry) {
+    throw new Error(t("xlsx_parse_error"));
+  }
+  return entry.async("text");
+}
+
+async function readSharedStrings(zip) {
+  const entry = zip.file("xl/sharedStrings.xml");
+  if (!entry) {
+    return [];
+  }
+
+  const xml = parseXml(await entry.async("text"));
+  return Array.from(xml.querySelectorAll("si")).map((item) => (
+    Array.from(item.querySelectorAll("t"))
+      .map((node) => node.textContent || "")
+      .join("")
+  ));
+}
+
+async function readStyleKinds(zip) {
+  const entry = zip.file("xl/styles.xml");
+  if (!entry) {
+    return [];
+  }
+
+  const xml = parseXml(await entry.async("text"));
+  const customFormats = new Map(
+    Array.from(xml.querySelectorAll("numFmts numFmt")).map((node) => [
+      Number.parseInt(node.getAttribute("numFmtId") || "", 10),
+      node.getAttribute("formatCode") || ""
+    ])
+  );
+
+  return Array.from(xml.querySelectorAll("cellXfs xf")).map((xf) => {
+    const numFmtId = Number.parseInt(xf.getAttribute("numFmtId") || "", 10);
+    return resolveExcelNumberFormatKind(numFmtId, customFormats.get(numFmtId) || "");
+  });
+}
+
+function resolveFirstWorksheetPath(workbookXmlText, workbookRelsXmlText) {
+  const workbookXml = parseXml(workbookXmlText);
+  const relsXml = parseXml(workbookRelsXmlText);
+  const firstSheet = workbookXml.querySelector("sheets > sheet");
+  if (!firstSheet) {
+    return null;
+  }
+
+  const relationshipId = firstSheet.getAttribute("r:id") || firstSheet.getAttributeNS("*", "id");
+  if (!relationshipId) {
+    return null;
+  }
+
+  const relationship = Array.from(relsXml.querySelectorAll("Relationship")).find((node) => (
+    node.getAttribute("Id") === relationshipId
+  ));
+
+  const target = relationship?.getAttribute("Target");
+  if (!target) {
+    return null;
+  }
+
+  if (target.startsWith("/")) {
+    return target.replace(/^\/+/, "");
+  }
+
+  return target.startsWith("xl/") ? target : `xl/${target.replace(/^\/+/, "")}`;
+}
+
+function parseWorksheetRows(worksheetXmlText, sharedStrings, styleKinds) {
+  const worksheetXml = parseXml(worksheetXmlText);
+  const rows = [];
+
+  Array.from(worksheetXml.querySelectorAll("sheetData > row")).forEach((rowNode) => {
+    const rowIndex = Math.max(0, Number.parseInt(rowNode.getAttribute("r") || "1", 10) - 1);
+    const rowValues = rows[rowIndex] || [];
+
+    Array.from(rowNode.querySelectorAll("c")).forEach((cellNode) => {
+      const reference = cellNode.getAttribute("r") || "";
+      const columnIndex = getColumnIndexFromReference(reference);
+      const styleIndex = Number.parseInt(cellNode.getAttribute("s") || "", 10);
+      rowValues[columnIndex] = parseWorksheetCellValue(cellNode, sharedStrings, styleKinds[styleIndex] || "plain");
+    });
+
+    rows[rowIndex] = rowValues;
+  });
+
+  return rows.map((row) => {
+    const safeRow = Array.isArray(row) ? row : [];
+    const width = safeRow.length;
+    return Array.from({ length: width }, (_, index) => safeRow[index] ?? "");
+  });
+}
+
+function parseWorksheetCellValue(cellNode, sharedStrings, styleKind) {
+  const type = cellNode.getAttribute("t") || "";
+  if (type === "inlineStr") {
+    return Array.from(cellNode.querySelectorAll("is t"))
+      .map((node) => node.textContent || "")
+      .join("");
+  }
+
+  const valueNode = cellNode.querySelector("v");
+  const rawValue = valueNode?.textContent || "";
+
+  if (type === "s") {
+    const sharedIndex = Number.parseInt(rawValue, 10);
+    return sharedStrings[sharedIndex] || "";
+  }
+
+  if (type === "b") {
+    return rawValue === "1" ? "TRUE" : "FALSE";
+  }
+
+  if (type === "str") {
+    return rawValue;
+  }
+
+  if (!rawValue) {
+    return "";
+  }
+
+  if (styleKind === "date" || styleKind === "datetime" || styleKind === "time") {
+    return formatExcelSerialValue(rawValue, styleKind);
+  }
+
+  return rawValue;
+}
+
+function parseXml(xmlText) {
+  return new DOMParser().parseFromString(xmlText, "application/xml");
+}
+
+function getColumnIndexFromReference(reference) {
+  const match = String(reference || "").match(/[A-Z]+/i);
+  if (!match) {
+    return 0;
+  }
+
+  return match[0]
+    .toUpperCase()
+    .split("")
+    .reduce((total, char) => total * 26 + (char.charCodeAt(0) - 64), 0) - 1;
+}
+
+function resolveExcelNumberFormatKind(numFmtId, formatCode) {
+  const builtInDateFormats = new Set([14, 15, 16, 17]);
+  const builtInTimeFormats = new Set([18, 19, 20, 21, 45, 46, 47]);
+  const builtInDateTimeFormats = new Set([22]);
+
+  if (builtInDateTimeFormats.has(numFmtId)) {
+    return "datetime";
+  }
+  if (builtInDateFormats.has(numFmtId)) {
+    return "date";
+  }
+  if (builtInTimeFormats.has(numFmtId)) {
+    return "time";
+  }
+
+  const cleaned = String(formatCode || "")
+    .toLowerCase()
+    .replace(/"[^"]*"/g, "")
+    .replace(/\[[^\]]*]/g, "")
+    .replace(/\\./g, "")
+    .replace(/_.?/g, "")
+    .replace(/\*/g, "");
+
+  const hasDate = /[yd]/.test(cleaned);
+  const hasTime = /h|s|am\/pm/.test(cleaned);
+
+  if (hasDate && hasTime) {
+    return "datetime";
+  }
+  if (hasDate) {
+    return "date";
+  }
+  if (hasTime) {
+    return "time";
+  }
+
+  return "plain";
+}
+
+function formatExcelSerialValue(rawValue, styleKind) {
+  const numericValue = Number(rawValue);
+  if (!Number.isFinite(numericValue)) {
+    return rawValue;
+  }
+
+  const date = new Date(Date.UTC(1899, 11, 30) + Math.round(numericValue * 86400000));
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+
+  if (styleKind === "date") {
+    return `${year}-${month}-${day}`;
+  }
+  if (styleKind === "time") {
+    return `${hours}:${minutes}:${seconds}`;
+  }
+  if (styleKind === "datetime") {
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  return rawValue;
+}
+
+function trimEmptyWorksheetRows(rows) {
+  const normalized = rows.map((row) => {
+    const safeRow = Array.isArray(row) ? [...row] : [];
+    while (safeRow.length > 0 && !textOrNull(safeRow[safeRow.length - 1])) {
+      safeRow.pop();
+    }
+    return safeRow.map((value) => String(value ?? ""));
+  });
+
+  while (normalized.length > 0 && normalized[normalized.length - 1].every((value) => !textOrNull(value))) {
+    normalized.pop();
+  }
+
+  return normalized;
+}
+
+function matrixToCsv(rows) {
+  return `${rows.map((row) => row.map(escapeCsvValue).join(",")).join("\n")}\n`;
+}
+
+function escapeCsvValue(value) {
+  const text = String(value ?? "");
+  if (!/[",\n]/.test(text)) {
+    return text;
+  }
+  return `"${text.replace(/"/g, "\"\"")}"`;
 }
 
 function rerunConversionIfPossible() {
@@ -3957,7 +4307,7 @@ function renderHeaderEditor(headerDescriptors) {
   renderExpectedFieldsPalette();
 
   if (!headerDescriptors.length) {
-    dom.headerOverridesBody.innerHTML = `<tr><td colspan="4" class="placeholder-cell">${escapeHtml(t("header_overrides_placeholder"))}</td></tr>`;
+    dom.headerOverridesBody.innerHTML = `<tr><td colspan="4" class="placeholder-cell">${escapeHtml(t("header_overrides_placeholder_file"))}</td></tr>`;
     if (dom.resetHeaderOverrides) {
       dom.resetHeaderOverrides.disabled = true;
     }
@@ -4143,7 +4493,7 @@ function downloadJson(fileName) {
   URL.revokeObjectURL(url);
 }
 
-function downloadTemplate() {
+function downloadCsvTemplate() {
   const csvContent = buildTemplateCsv();
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -4156,25 +4506,28 @@ function downloadTemplate() {
   URL.revokeObjectURL(url);
 }
 
-function buildTemplateCsv() {
-  const templateHeaders = [
-    "date",
-    "time_departure",
-    "time_arrival",
-    "registration",
-    "aircraft_manufact",
-    "aircraft_model",
-    "departure_airport",
-    "arrival_airport",
-    "time_total_aircraft",
-    "pilot1_first_name",
-    "pilot1_last_name",
-    "pilot2_first_name",
-    "pilot2_last_name",
-    "flight_number",
-    "remarks"
-  ];
+async function downloadXlsxTemplate() {
+  try {
+    const response = await fetch("./assets/aerolog-import-template.xlsx");
+    if (!response.ok) {
+      throw new Error(t("xlsx_parse_error"));
+    }
 
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "aerolog-import-template.xlsx";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  } catch {
+    renderFatal(t("xlsx_parse_error"));
+  }
+}
+
+function buildTemplateCsv() {
   const templateRow = [
     "2026-06-14",
     "09:15",
@@ -4192,6 +4545,10 @@ function buildTemplateCsv() {
     "TR123",
     t("template_sample_remark")
   ];
+
+  const templateHeaders = TEMPLATE_HEADERS.map((header) => (
+    TEMPLATE_REQUIRED_HEADERS.has(header) ? `*${header}` : header
+  ));
 
   return `${templateHeaders.join(",")}\n${templateRow.join(",")}\n`;
 }
@@ -4251,7 +4608,7 @@ function setLanguage(languageCode, { rerender = true } = {}) {
 }
 
 function applyTranslations() {
-  document.title = t("page_title");
+  document.title = t("page_title_file");
 
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     element.textContent = t(element.dataset.i18n);

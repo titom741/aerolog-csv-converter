@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AeroLog CSV Converter</title>
-  <link rel="stylesheet" href="./styles.css?v=20260626d">
+  <title>AeroLog CSV/XLSX Converter</title>
+  <link rel="stylesheet" href="./styles.css?v=20260708a">
 </head>
 <body>
   <main class="page-shell">
@@ -19,9 +19,9 @@
           </label>
         </div>
       </div>
-      <h1 data-i18n-html="hero_title_html">CSV to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code></h1>
-      <p class="hero-copy" data-i18n="hero_copy">
-        This page reads a single CSV file, automatically detects known columns,
+      <h1 data-i18n-html="hero_title_file_html">CSV/XLSX to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code></h1>
+      <p class="hero-copy" data-i18n="hero_copy_file">
+        This page reads a single CSV or XLSX file, automatically detects known columns,
         validates the minimum required fields, and generates the three JSON files expected by the app.
       </p>
       <div class="hero-briefing">
@@ -31,7 +31,7 @@
         </article>
         <article class="hero-brief-card">
           <h2 data-i18n="hero_how_title">How to use it</h2>
-          <p data-i18n="hero_how_copy">Load a CSV, drag the expected labels onto the right columns, fix orange or red signals, then download the three JSON files.</p>
+          <p data-i18n="hero_how_copy_file">Load a CSV or XLSX file, drag the expected labels onto the right columns, fix orange or red signals, then download the three JSON files.</p>
         </article>
         <article class="hero-brief-card">
           <h2 data-i18n="hero_minimums_title">Minimum fields</h2>
@@ -40,13 +40,17 @@
       </div>
       <div class="hero-actions">
         <label class="primary-button file-button">
-          <input id="csv-file-input" type="file" accept=".csv,text/csv">
-          <span data-i18n="choose_csv">Choose a CSV</span>
+          <input id="csv-file-input" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+          <span data-i18n="choose_file">Choose a CSV or XLSX</span>
         </label>
         <button id="template-button" class="secondary-button" type="button" data-i18n="download_csv_template">Download CSV template</button>
+        <button id="template-xlsx-button" class="secondary-button" type="button" data-i18n="download_xlsx_template">Download XLSX template</button>
       </div>
       <p class="helper-text" data-i18n-html="output_filenames_html">
         Output filenames are always set to <code>Flights.json</code>, <code>Pilots.json</code>, and <code>Aircrafts.json</code>.
+      </p>
+      <p class="helper-text" data-i18n-html="template_hint_html">
+        In the CSV template, required headers start with <code>*</code>. In the XLSX template, required headers are bold.
       </p>
     </section>
 
@@ -138,8 +142,8 @@
     <section class="panel">
       <div class="panel-heading panel-toolbar">
         <div>
-          <h2 data-i18n="header_overrides_title">CSV header editor</h2>
-          <p data-i18n-html="header_overrides_copy">Drag an expected label onto a column to rename it automatically, or edit it manually. You can also add or remove headers.</p>
+          <h2 data-i18n="header_overrides_title_file">CSV/XLSX header editor</h2>
+          <p data-i18n-html="header_overrides_copy_file">Drag an expected label onto a CSV or XLSX column to rename it automatically, or edit it manually. You can also add or remove headers.</p>
         </div>
       </div>
       <div class="editor-legend">
@@ -193,7 +197,7 @@
               </thead>
               <tbody id="header-overrides-body">
                 <tr>
-                  <td colspan="4" class="placeholder-cell" data-i18n="header_overrides_placeholder">Load a CSV to edit column names.</td>
+                  <td colspan="4" class="placeholder-cell" data-i18n="header_overrides_placeholder_file">Load a CSV or XLSX file to edit column names.</td>
                 </tr>
               </tbody>
             </table>
@@ -252,7 +256,7 @@
     <div id="problem-row-panel-backdrop" class="problem-row-panel-backdrop hidden"></div>
     <aside id="problem-row-panel" class="problem-row-panel hidden" aria-hidden="true"></aside>
   </main>
-
-  <script src="./app.js?v=20260626d"></script>
+  <script src="./vendor/jszip.min.js?v=20260708a"></script>
+  <script src="./app.js?v=20260708a"></script>
 </body>
 </html>
