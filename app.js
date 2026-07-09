@@ -62,7 +62,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Airport codes are kept as-is in the JSON, but the app will only import flights if those codes already exist in its airport database.",
     result_title: "Result",
     status_no_file: "No file loaded.",
-    summary_rows: "CSV Rows",
+    summary_rows: "CSV/XLSX Rows",
     summary_flights: "Flights",
     summary_pilots: "Pilots",
     summary_aircrafts: "Aircrafts",
@@ -77,6 +77,7 @@ const TRANSLATIONS = {
     header_overrides_copy_file: "Drag an expected label onto a CSV or XLSX column to rename it automatically, or edit it manually. You can also add or remove headers.",
     header_overrides_add: "Add a header",
     header_overrides_reset: "Reset renaming",
+    expected_fields_title: "Recognized labels",
     expected_fields_copy: "Drag one of the expected labels below onto a CSV column.",
     legend_validated: "Green: validated label",
     legend_optional: "Blue: optional recognized label",
@@ -250,7 +251,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Les codes aéroport sont conservés tels quels dans le JSON, mais l'app n'importera les vols que si ces codes existent déjà dans sa base aéroports.",
     result_title: "Résultat",
     status_no_file: "Aucun fichier chargé.",
-    summary_rows: "Lignes CSV",
+    summary_rows: "Lignes CSV/XLSX",
     summary_flights: "Vols",
     summary_pilots: "Pilotes",
     summary_aircrafts: "Avions",
@@ -265,6 +266,7 @@ const TRANSLATIONS = {
     header_overrides_copy_file: "Glissez une étiquette attendue sur une colonne CSV ou XLSX pour la renommer automatiquement, ou modifiez-la manuellement. Vous pouvez aussi ajouter ou supprimer des headers.",
     header_overrides_add: "Ajouter un header",
     header_overrides_reset: "Réinitialiser",
+    expected_fields_title: "Étiquettes reconnues",
     expected_fields_copy: "Glissez l'une des étiquettes attendues ci-dessous sur une colonne du CSV.",
     legend_validated: "Vert : étiquette validée",
     legend_optional: "Bleu : étiquette optionnelle reconnue",
@@ -431,7 +433,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Los códigos de aeropuerto se conservan tal cual en el JSON, pero la app solo importará vuelos si esos códigos ya existen en su base de aeropuertos.",
     result_title: "Resultado",
     status_no_file: "Ningún archivo cargado.",
-    summary_rows: "Filas CSV",
+    summary_rows: "Filas CSV/XLSX",
     summary_flights: "Vuelos",
     summary_pilots: "Pilotos",
     summary_aircrafts: "Aeronaves",
@@ -562,7 +564,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Flughafencodes bleiben im JSON unverändert, aber die App importiert Flüge nur, wenn diese Codes bereits in ihrer Flughafendatenbank vorhanden sind.",
     result_title: "Ergebnis",
     status_no_file: "Keine Datei geladen.",
-    summary_rows: "CSV-Zeilen",
+    summary_rows: "CSV/XLSX-Zeilen",
     summary_flights: "Flüge",
     summary_pilots: "Piloten",
     summary_aircrafts: "Flugzeuge",
@@ -693,7 +695,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "I codici aeroporto restano invariati nel JSON, ma l'app importerà i voli solo se quei codici esistono già nel suo database aeroporti.",
     result_title: "Risultato",
     status_no_file: "Nessun file caricato.",
-    summary_rows: "Righe CSV",
+    summary_rows: "Righe CSV/XLSX",
     summary_flights: "Voli",
     summary_pilots: "Piloti",
     summary_aircrafts: "Aeromobili",
@@ -824,7 +826,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Os códigos de aeroporto são mantidos como estão no JSON, mas o app só importará voos se esses códigos já existirem no banco de aeroportos.",
     result_title: "Resultado",
     status_no_file: "Nenhum arquivo carregado.",
-    summary_rows: "Linhas CSV",
+    summary_rows: "Linhas CSV/XLSX",
     summary_flights: "Voos",
     summary_pilots: "Pilotos",
     summary_aircrafts: "Aeronaves",
@@ -955,7 +957,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Luchthavencodes blijven ongewijzigd in de JSON, maar de app importeert alleen vluchten als die codes al in de luchthaven-database bestaan.",
     result_title: "Resultaat",
     status_no_file: "Geen bestand geladen.",
-    summary_rows: "CSV-rijen",
+    summary_rows: "CSV/XLSX-rijen",
     summary_flights: "Vluchten",
     summary_pilots: "Piloten",
     summary_aircrafts: "Vliegtuigen",
@@ -1086,7 +1088,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Kody lotnisk pozostają bez zmian w JSON, ale aplikacja zaimportuje loty tylko wtedy, gdy kody już istnieją w bazie lotnisk.",
     result_title: "Wynik",
     status_no_file: "Nie wczytano pliku.",
-    summary_rows: "Wiersze CSV",
+    summary_rows: "Wiersze CSV/XLSX",
     summary_flights: "Loty",
     summary_pilots: "Piloci",
     summary_aircrafts: "Statki powietrzne",
@@ -1217,7 +1219,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Havalimanı kodları JSON'da olduğu gibi tutulur, ancak uygulama bu kodlar havalimanı veritabanında zaten varsa uçuşları içe aktarır.",
     result_title: "Sonuç",
     status_no_file: "Dosya yüklenmedi.",
-    summary_rows: "CSV satırları",
+    summary_rows: "CSV/XLSX satırları",
     summary_flights: "Uçuşlar",
     summary_pilots: "Pilotlar",
     summary_aircrafts: "Uçaklar",
@@ -1348,7 +1350,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "Коды аэропортов сохраняются в JSON как есть, но приложение импортирует полеты только если эти коды уже существуют в его базе аэропортов.",
     result_title: "Результат",
     status_no_file: "Файл не загружен.",
-    summary_rows: "Строки CSV",
+    summary_rows: "Строки CSV/XLSX",
     summary_flights: "Полеты",
     summary_pilots: "Пилоты",
     summary_aircrafts: "ВС",
@@ -1479,7 +1481,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "تُحفظ رموز المطارات كما هي في JSON، لكن التطبيق سيستورد الرحلات فقط إذا كانت هذه الرموز موجودة بالفعل في قاعدة بيانات المطارات.",
     result_title: "النتيجة",
     status_no_file: "لم يتم تحميل ملف.",
-    summary_rows: "صفوف CSV",
+    summary_rows: "صفوف CSV/XLSX",
     summary_flights: "الرحلات",
     summary_pilots: "الطيارون",
     summary_aircrafts: "الطائرات",
@@ -1610,7 +1612,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "एयरपोर्ट कोड JSON में वैसे ही रहते हैं, लेकिन ऐप उड़ानें तभी आयात करेगा जब वे कोड उसके एयरपोर्ट डेटाबेस में पहले से मौजूद हों।",
     result_title: "परिणाम",
     status_no_file: "कोई फ़ाइल लोड नहीं हुई।",
-    summary_rows: "CSV पंक्तियाँ",
+    summary_rows: "CSV/XLSX पंक्तियाँ",
     summary_flights: "उड़ानें",
     summary_pilots: "पायलट",
     summary_aircrafts: "विमान",
@@ -1741,7 +1743,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "机场代码会原样保留在 JSON 中，但只有当这些代码已存在于应用的机场数据库中时，应用才会导入这些航班。",
     result_title: "结果",
     status_no_file: "尚未加载文件。",
-    summary_rows: "CSV 行数",
+    summary_rows: "CSV/XLSX 行数",
     summary_flights: "航班",
     summary_pilots: "飞行员",
     summary_aircrafts: "飞机",
@@ -1872,7 +1874,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "空港コードは JSON 内でそのまま保持されますが、アプリがフライトを取り込むのは、そのコードが空港データベースに既に存在する場合のみです。",
     result_title: "結果",
     status_no_file: "ファイルが読み込まれていません。",
-    summary_rows: "CSV 行数",
+    summary_rows: "CSV/XLSX 行数",
     summary_flights: "フライト",
     summary_pilots: "操縦士",
     summary_aircrafts: "機体",
@@ -2003,7 +2005,7 @@ const TRANSLATIONS = {
     airport_codes_helper: "공항 코드는 JSON에 그대로 유지되지만, 앱은 해당 코드가 공항 데이터베이스에 이미 존재하는 경우에만 비행을 가져옵니다.",
     result_title: "결과",
     status_no_file: "불러온 파일이 없습니다.",
-    summary_rows: "CSV 행",
+    summary_rows: "CSV/XLSX 행",
     summary_flights: "비행",
     summary_pilots: "조종사",
     summary_aircrafts: "항공기",
@@ -2104,6 +2106,7 @@ const TRANSLATIONS = {
 
 const TRANSLATION_COMPLEMENTS = {
   es: {
+    expected_fields_title: "Etiquetas reconocidas",
     version_label: "Versión",
     hero_why_title: "Por qué existe esta página",
     hero_why_copy: "Las exportaciones CSV suelen usar etiquetas que no coinciden con la app. Esta herramienta ayuda a normalizarlas antes de la importación para mantener los JSON utilizables.",
@@ -2163,6 +2166,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Todas las etiquetas obligatorias están disponibles."
   },
   de: {
+    expected_fields_title: "Erkannte Bezeichnungen",
     version_label: "Version",
     hero_why_title: "Warum es diese Seite gibt",
     hero_why_copy: "CSV-Exporte verwenden oft Bezeichnungen, die nicht zur App passen. Dieses Werkzeug hilft, sie vor dem Import zu vereinheitlichen, damit die erzeugten JSON-Dateien nutzbar bleiben.",
@@ -2222,6 +2226,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Alle erforderlichen Bezeichnungen sind vorhanden."
   },
   it: {
+    expected_fields_title: "Etichette riconosciute",
     version_label: "Versione",
     hero_why_title: "Perché esiste questa pagina",
     hero_why_copy: "Le esportazioni CSV usano spesso etichette che non corrispondono all'app. Questo strumento aiuta a normalizzarle prima dell'importazione per mantenere i JSON utilizzabili.",
@@ -2281,6 +2286,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Tutte le etichette obbligatorie sono disponibili."
   },
   pt: {
+    expected_fields_title: "Rótulos reconhecidos",
     version_label: "Versão",
     hero_why_title: "Por que esta página existe",
     hero_why_copy: "As exportações CSV costumam usar rótulos que não correspondem ao app. Esta ferramenta ajuda a normalizá-los antes da importação para manter os JSON utilizáveis.",
@@ -2340,6 +2346,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Todos os rótulos obrigatórios estão disponíveis."
   },
   nl: {
+    expected_fields_title: "Herkende labels",
     version_label: "Versie",
     hero_why_title: "Waarom deze pagina bestaat",
     hero_why_copy: "CSV-exporten gebruiken vaak labels die niet overeenkomen met de app. Deze tool helpt ze vóór de import te normaliseren zodat de gegenereerde JSON bruikbaar blijft.",
@@ -2399,6 +2406,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Alle verplichte labels zijn beschikbaar."
   },
   pl: {
+    expected_fields_title: "Rozpoznane etykiety",
     version_label: "Wersja",
     hero_why_title: "Dlaczego ta strona istnieje",
     hero_why_copy: "Eksporty CSV często używają etykiet, które nie pasują do aplikacji. To narzędzie pomaga je ujednolicić przed importem, aby wygenerowane pliki JSON pozostały użyteczne.",
@@ -2458,6 +2466,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Wszystkie wymagane etykiety są dostępne."
   },
   tr: {
+    expected_fields_title: "Tanınan etiketler",
     version_label: "Sürüm",
     hero_why_title: "Bu sayfa neden var",
     hero_why_copy: "CSV dışa aktarımları çoğu zaman uygulamayla eşleşmeyen etiketler kullanır. Bu araç, oluşturulan JSON dosyalarının kullanılabilir kalması için bunları içe aktarmadan önce standartlaştırmaya yardımcı olur.",
@@ -2517,6 +2526,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Tüm zorunlu etiketler mevcut."
   },
   ru: {
+    expected_fields_title: "Распознанные метки",
     version_label: "Версия",
     hero_why_title: "Зачем нужна эта страница",
     hero_why_copy: "Экспорт CSV часто использует метки, которые не совпадают с приложением. Этот инструмент помогает нормализовать их перед импортом, чтобы сгенерированные JSON оставались пригодными к использованию.",
@@ -2576,6 +2586,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "Все обязательные метки доступны."
   },
   ar: {
+    expected_fields_title: "التسميات المعروفة",
     version_label: "الإصدار",
     hero_why_title: "لماذا توجد هذه الصفحة",
     hero_why_copy: "غالبًا ما تستخدم ملفات CSV المصدّرة تسميات لا تتطابق مع التطبيق. تساعد هذه الأداة على توحيدها قبل الاستيراد حتى تبقى ملفات JSON الناتجة قابلة للاستخدام.",
@@ -2635,6 +2646,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "جميع التسميات الإلزامية متوفرة."
   },
   hi: {
+    expected_fields_title: "पहचाने गए लेबल",
     version_label: "संस्करण",
     hero_why_title: "यह पेज क्यों है",
     hero_why_copy: "CSV एक्सपोर्ट अक्सर ऐसे लेबल इस्तेमाल करते हैं जो ऐप से मेल नहीं खाते। यह टूल उन्हें इम्पोर्ट से पहले सामान्य रूप देता है ताकि बने हुए JSON उपयोगी रहें।",
@@ -2694,6 +2706,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "सभी अनिवार्य लेबल उपलब्ध हैं।"
   },
   zh: {
+    expected_fields_title: "已识别标签",
     version_label: "版本",
     hero_why_title: "为什么有这个页面",
     hero_why_copy: "CSV 导出通常会使用与应用不一致的标签。这个工具会在导入前帮助你统一这些标签，以确保生成的 JSON 仍然可用。",
@@ -2753,6 +2766,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "所有必填标签都已可用。"
   },
   ja: {
+    expected_fields_title: "認識済みラベル",
     version_label: "バージョン",
     hero_why_title: "このページがある理由",
     hero_why_copy: "CSV エクスポートでは、アプリと一致しないラベルが使われることがよくあります。このツールは、生成される JSON を使いやすい状態に保つため、インポート前にそれらを正規化します。",
@@ -2812,6 +2826,7 @@ const TRANSLATION_COMPLEMENTS = {
     editor_missing_required_empty: "必要なラベルはすべてそろっています。"
   },
   ko: {
+    expected_fields_title: "인식된 라벨",
     version_label: "버전",
     hero_why_title: "이 페이지가 있는 이유",
     hero_why_copy: "CSV 내보내기는 앱과 맞지 않는 라벨을 사용하는 경우가 많습니다. 이 도구는 가져오기 전에 이를 정규화해 생성된 JSON을 계속 사용할 수 있게 해줍니다.",
